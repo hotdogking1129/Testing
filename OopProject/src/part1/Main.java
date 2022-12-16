@@ -1,4 +1,5 @@
 package part1;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +15,6 @@ public class Main {
 		List<Food>food = new ArrayList<>();
 		List<Drink>drink = new ArrayList<>();
 		List<OrderList>orderList = new ArrayList<>();
-		Scanner scanner = new Scanner(System.in);
 		
 		food.add(new Food("Nasi Lemak", 360, 4.50));
 		food.add(new Food("Roti canai", 200, 2.00));
@@ -27,7 +27,10 @@ public class Main {
 		user.add(new User("sun","AI210343","1234"));
 		user.add(new User("see","AI210334","4321"));
 		user.add(new User("edison","AI210408","2314"));
-
+		
+		
+		
+		Scanner scanner = new Scanner(System.in);
 		String name,noMatrics,password = "";
 		User userLogin;
 		
@@ -86,21 +89,21 @@ public class Main {
 		}while(userLogin == null);
 		
 		System.out.println("Welcome "+userLogin.getName().toUpperCase());
-		Thread.sleep(500);
+		Thread.sleep(1500);
+		for (int i = 0; i < 50; ++i) System.out.println();
 		//Menu
 		int option = 0;
 		do {
 			
 			do {
-				Thread.sleep(1000);
-				for (int i = 0; i < 50; ++i) System.out.println();
-				System.out.println("------------Food Ordering System------------");
+				
+				System.out.println("------------Food Ordering System-------------");
 				System.out.println("|1)Order Food                               |");
 				System.out.println("|2)Order Drink                              |");
 				System.out.println("|3)View Order                               |");
 				System.out.println("|4)Cancel Order                             |");
 				System.out.println("|5)Exit                                     |");
-				System.out.println("--------------------------------------------");
+				System.out.println("---------------------------------------------");
 				
 				option = 0;
 				//Check validity
@@ -116,9 +119,11 @@ public class Main {
 			}while(!valid);
 			
 			switch(option) {
+			
+			
 			case 1: 
+				//Add food
 				int num = 0;
-
 				do {
 					Scanner input = new Scanner(System.in);
 					System.out.println("--------------------FOOD LIST--------------------");
@@ -143,21 +148,52 @@ public class Main {
 				}while(num<=0 || num>food.size()+1);
 				
 				Food foodOrder = new Food(food.get(num-1).getProductName(),food.get(num-1).getDetail(),food.get(num-1).getPrice());
+				
+				//Add Sauce
+				int sauce = 3;
+				do {
+					Scanner input = new Scanner(System.in);
+					System.out.println("--------------------Sauce--------------------");
+					System.out.println("1) Chili ");
+					System.out.println("2) Tomato ");
+					System.out.println("3) No Sauce ");
+					do {
+						System.out.println("Enter the sauce that your want to add:");
+						try {
+							sauce = input.nextInt();
+							valid = true;
+						}catch (InputMismatchException e) {
+							System.out.println("Please enter a number of the sauce that you want !!!");
+							valid = false;
+						}
+						if(sauce <1 || sauce >3) {
+							System.out.println("Your should input number from 1-3");
+						}
+					}while(sauce<1 || sauce >3);
+				}while (!valid);
+				foodOrder.setSauce(sauce);
+				
+				//Add quantity
 				System.out.println("Enter the quantity of food you want");
 				int numberOfFood = scanner.nextInt();
 				foodOrder.setQuantityInOrder(numberOfFood);
 				
+				//Set date
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 			    Date date = new Date(); 
+			    
+			    //Input ordered food in to orderList
 				if(orderList.size() == 0) {
 					orderList.add(new OrderList(userLogin, foodOrder, date));
 				}else {
 					orderList.get(0).setOrderFood(orderList, userLogin, foodOrder);
 				}
-				
 				break;
+				
+				
 			case 2:
-
+				
+				//Add drink
 				do {
 					Scanner input = new Scanner(System.in);
 					System.out.println("--------------------Drink LIST--------------------");
@@ -168,7 +204,7 @@ public class Main {
 					
 						num = 0;
 					try {
-						System.out.println("Enter the type of drink you want.");
+						System.out.println("Enter the type of drink you want");
 						num = input.nextInt();
 					}catch (InputMismatchException e) {
 						System.out.println("!!! Please enter a number !!!");
@@ -180,42 +216,182 @@ public class Main {
 						Thread.sleep(1000);
 					}
 				}while(num<=0 || num>drink.size()+1);
-				
-				date = new Date(); 
 				Drink drinkOrder = new Drink(drink.get(num-1).getProductName(),drink.get(num-1).getDetail(),drink.get(num-1).getPrice());
+				
+				//Set size for drink
+				String size = "";
+				do {
+					valid = true;
+					Scanner input = new Scanner(System.in);
+					System.out.println("Did you want to go-Large the drink? (Y/N)");
+					size = input.nextLine();
+					if(size.equalsIgnoreCase("y")) {
+						drinkOrder.goLarge();
+						drinkOrder.setDetail(drinkOrder.getDetail()*2);
+					}else if(size.equalsIgnoreCase("n")) {
+						
+					}else {
+						System.out.println("Please enter y or n.");
+						valid = false;
+					}
+				}while(!valid);
+				
+				//Set status for drink
+				String hot = "";
+				do {
+					valid = true;
+					Scanner input = new Scanner(System.in);
+					System.out.println("Did you want to order a cold drink? (Y/N)");
+					hot = input.nextLine();
+					if(hot.equalsIgnoreCase("y")) {
+						drinkOrder.addIce();
+					}else if(hot.equalsIgnoreCase("n")) {
+						
+					}else {
+						System.out.println("Please enter y or n.");
+						valid = false;
+					}
+				}while(!valid);
+				
 				System.out.println("Enter the quantity of drink you want");
 				int numberOfdrink = scanner.nextInt();
 				drinkOrder.setQuantityInOrder(numberOfdrink);
-				
+				date = new Date(); 
 				if(orderList.size() == 0) {
 					orderList.add(new OrderList(userLogin, drinkOrder, date));
 				}else {
 					orderList.get(0).setOrderDrink(orderList, userLogin, drinkOrder);
 				}
-				
 				break;
+				
+				
 			case 3:
 				
-				int numArrayListUser = orderList.get(0).findUser(orderList, userLogin);
-				System.out.println("---------------Food---------------");
-				for(int i = 0 ; i < orderList.get(numArrayListUser).getFood().size() ; i++) {
-					System.out.println( i+1+ ")" + orderList.get(numArrayListUser).getFood().get(i) );
+				if(orderList.size()==0) {
+					System.out.println("You have no order anything.");
+				}else {
+					double calories = 0, price = 0;
+					int numArrayListUser = orderList.get(0).findUser(orderList, userLogin);
+					if(orderList.get(numArrayListUser).getFood().size() != 0) {
+						System.out.println("---------------Food---------------");
+					}
+					for(int i = 0 ; i < orderList.get(numArrayListUser).getFood().size() ; i++) {
+						System.out.println( i+1+ ")" + orderList.get(numArrayListUser).getFood().get(i) + " --- " + orderList.get(numArrayListUser).getFood().get(i).getQuantityInOrder() );
+						calories += orderList.get(numArrayListUser).getFood().get(i).getDetail() * orderList.get(numArrayListUser).getFood().get(i).getQuantityInOrder();
+						price += orderList.get(numArrayListUser).getFood().get(i).getPrice() * orderList.get(numArrayListUser).getFood().get(i).getQuantityInOrder();
+					}
+					if(orderList.get(numArrayListUser).getDrink().size() != 0) {
+						System.out.println("---------------Drink--------------");
+					}
+					for(int i = 0; i<orderList.get(numArrayListUser).getDrink().size();i++) {
+						System.out.println( i+1+ ")" + orderList.get(numArrayListUser).getDrink().get(i) + " --- " + orderList.get(numArrayListUser).getDrink().get(i).getQuantityInOrder());
+						calories += orderList.get(numArrayListUser).getDrink().get(i).getDetail() * orderList.get(numArrayListUser).getDrink().get(i).getQuantityInOrder();
+						price += orderList.get(numArrayListUser).getDrink().get(i).getPrice() * orderList.get(numArrayListUser).getDrink().get(i).getQuantityInOrder();
+					}
+					System.out.println("------------------------------");
+					System.out.println("Total calories: " + calories + "kcal");
+					System.out.println("Total price: RM" + String.format("%.2f", price));
+					System.out.println("\nEnter any key to continue...");
+					scanner.nextLine();
 				}
-				System.out.println("---------------Drink--------------");
-				for(int i = 0; i<orderList.get(numArrayListUser).getDrink().size();i++) {
-					System.out.println( i+1+ ")" + orderList.get(numArrayListUser).getDrink().get(i) );
-				}
-				scanner.next();
-				
 				break;
+				
+				
 			case 4:
+				if(orderList.size()==0) {
+					System.out.println("You have no order anything.");
+				}else {
+					int cancel = 0;
+					do {
+						System.out.println("---------------Cancel order---------------");
+						System.out.println("1) Cancel all order");
+						System.out.println("2) Cancel a order");
+						System.out.println("3) Exit");
+						System.out.println("------------------------------------------");
+						do {
+							try {
+								Scanner input = new Scanner(System.in);
+								System.out.println("Enter the number of option you want:");
+								cancel = input.nextInt();
+								valid = true;
+							}catch (InputMismatchException e) {
+								System.out.println("!!! Please enter a number !!!");
+								valid = false;
+							}
+						}while(!valid);
+						
+						if(cancel == 1) {
+							String comfirm = "";
+							do {
+								try {
+								System.out.println("Are you sure to remove all order.(Y/N)");
+								Scanner input = new Scanner(System.in);
+								comfirm = input.nextLine();
+								if(comfirm.equalsIgnoreCase("y")) {
+									orderList.remove(orderList.get(0).findUser(orderList, userLogin));
+								}else if(comfirm.equalsIgnoreCase("n")) {
+									
+								}else {
+									System.out.print("Please enter y or n.");
+									valid = false;
+								}
+								valid = true;
+								}catch (InputMismatchException e) {
+									System.out.println("!!! Please enter a number !!!");
+									valid = false;
+								}
+							}while(!valid);
+							break;
+							
+						}else if(cancel == 2) {
+							int numArrayListUser = orderList.get(0).findUser(orderList, userLogin);
+							System.out.println("---------------OrderList---------------");
+							for(int i = 0 ; i < orderList.get(numArrayListUser).getFood().size() ; i++) {
+								System.out.println( i+1+ ")" + orderList.get(numArrayListUser).getFood().get(i) + " --- " + orderList.get(numArrayListUser).getFood().get(i).getQuantityInOrder());
+							}
+							for(int i = orderList.get(numArrayListUser).getFood().size(); i<orderList.get(numArrayListUser).getFood().size() + orderList.get(numArrayListUser).getDrink().size(); i++) {
+								System.out.println( i+1+ ")" + orderList.get(numArrayListUser).getDrink().get(i - orderList.get(numArrayListUser).getFood().size()) + " --- " + orderList.get(numArrayListUser).getDrink().get(i - orderList.get(numArrayListUser).getFood().size()).getQuantityInOrder() );
+							}
+							System.out.println("---------------------------------------");
+							int cancelOrder = 0;
+							do {
+								try {
+									Scanner input = new Scanner(System.in);
+									System.out.println("Enter the list that you want to delete:");
+									cancelOrder = input.nextInt();
+									valid = true;
+									break;
+								}catch (InputMismatchException e) {
+									System.out.println("!!! Please enter a number !!!");
+									valid = false;
+								}
+							}while(!valid);
+							if(cancelOrder<= orderList.get(numArrayListUser).getFood().size() && orderList.get(numArrayListUser).getFood().size() != 0) {
+								orderList.get(numArrayListUser).getFood().remove(cancelOrder -1);
+							}else if(cancelOrder <= orderList.get(numArrayListUser).getFood().size() + orderList.get(numArrayListUser).getDrink().size()) {
+								orderList.get(numArrayListUser).getDrink().remove(cancelOrder - orderList.get(numArrayListUser).getFood().size() -1);
+							}
+							if(orderList.get(numArrayListUser).getFood().size() == 0 && orderList.get(numArrayListUser).getDrink().size() == 0 ){
+								orderList.remove(orderList.get(0).findUser(orderList, userLogin));
+							}
+							
+						}else if(cancel == 3){
+						}else {
+							System.out.println("Enter your should input number from 1-3");
+						}
+					}while(cancel != 3);
+				}
 				
 				break;
+				
+				
 			case 5:
 				System.out.println("End");
 				break;
+				
+				
 			default: 
-				System.out.println("Enter your should input number form 1-7.");
+				System.out.println("Your should input number from 1-7.");
 			}
 			
 			

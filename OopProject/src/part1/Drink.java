@@ -17,7 +17,7 @@ public class Drink extends Product{
 			double x = getPrice()+ GO_LARGE;
 			setPrice(x);
 			this.large = true;
-			System.out.println("Large size of "+ getProductName() +"have been successfully set up.");
+			System.out.println("Large size of "+ getProductName() +" have been successfully set up.");
 		}
 	}
 	
@@ -25,15 +25,24 @@ public class Drink extends Product{
 		if(this.hot) {
 			double x = getPrice() + ADD_ICE;
 			setPrice(x);
-			this.hot = true;
+			this.hot = false;
 			System.out.println("Cold drinks of "+ getProductName() +" have been successfully set up."   );
 		}else {
-			System.out.println("Your drink is alreade a cold drink.");
+			System.out.println("Your drink is already a cold drink.");
 		}
 	}
 	
 	public String toString() {
-		return getProductName() + "(" + getDetail() + " kcal)"+"-RM" + String.format("%.2f",getPrice());
+		return getProductName() + " (" + (large == true?"Large":"Small") + ", " + (hot == true?"Hot":"Cold") + " )" + " (" + getDetail() + " kcal)"+"-RM" + String.format("%.2f",getPrice());
 	}
+
+	public Boolean getLarge() {
+		return large;
+	}
+	
+	public Boolean getHot() {
+		return hot;
+	}
+
 	
 }

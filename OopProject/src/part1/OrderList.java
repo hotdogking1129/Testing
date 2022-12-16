@@ -60,6 +60,7 @@ public class OrderList {
 		int orderListNo = 0,productListNo = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 	    Date date = new Date(); 
+	    
 	    //Check user in order list 
 		for(int i = 0; i<orderList.size(); i++) {
 			if(user == orderList.get(i).getUser()) {
@@ -71,7 +72,8 @@ public class OrderList {
 		if(exist) {
 			//Check product in the list
 			for(int i = 0; i<orderList.get(orderListNo).food.size(); i++) {
-				if(food.getProductName() == orderList.get(orderListNo).getFood().get(i).getProductName()) {
+				if(food.getProductName() == orderList.get(orderListNo).getFood().get(i).getProductName() 
+						&& food.getSauce() == orderList.get(orderListNo).getFood().get(i).getSauce()) {
 					existfood = true;
 					productListNo = i;
 					break;
@@ -79,8 +81,20 @@ public class OrderList {
 			}
 			if(existfood) {
 				Scanner input = new Scanner(System.in);
-				System.out.println("Your already order the food, do you want to increase the number of food.");
-				Boolean yes = input.nextBoolean();
+				Boolean valid;
+				do {
+					valid = true;
+					System.out.println("Your already order the food, do you want to increase the number of food.(Y/N)");
+					String comfirm = input.nextLine();
+					if(comfirm.equalsIgnoreCase("y")) {
+						this.food.get(productListNo).setQuantityInOrder(this.food.get(productListNo).getQuantityInOrder() + food.getQuantityInOrder() );
+					}else if(comfirm.equalsIgnoreCase("n")) {
+						
+					}else {
+						System.out.println("Please enter y or n.");
+						valid = false;
+					}
+				}while(!valid);
 				
 			}else {
 				orderList.get(orderListNo).food.add(food);
@@ -108,7 +122,9 @@ public class OrderList {
 		if(exist) {
 			//Check product in the list
 			for(int i = 0; i<orderList.get(orderListNo).drink.size(); i++) {
-				if(drink.getProductName() == orderList.get(orderListNo).getDrink().get(i).getProductName()) {
+				if(drink.getProductName() == orderList.get(orderListNo).getDrink().get(i).getProductName() 
+						&& drink.getHot() == orderList.get(orderListNo).getDrink().get(i).getHot()
+							&& drink.getLarge() == orderList.get(orderListNo).getDrink().get(i).getLarge()) {
 					existdrink= true;
 					productListNo = i;
 					break;
@@ -116,9 +132,20 @@ public class OrderList {
 			}
 			if(existdrink) {
 				Scanner input = new Scanner(System.in);
-				System.out.println("Your already order the food, do you want to increase the number of food.");
-				Boolean yes = input.nextBoolean();
-				
+				Boolean valid;
+				do {
+					valid = true;
+					System.out.println("Your already order the drink, do you want to increase the number of drink.(Y/N)");
+					String comfirm = input.nextLine();
+					if(comfirm.equalsIgnoreCase("y")) {
+						this.drink.get(productListNo).setQuantityInOrder(this.drink.get(productListNo).getQuantityInOrder() + drink.getQuantityInOrder() );
+					}else if(comfirm.equalsIgnoreCase("n")) {
+						
+					}else {
+						System.out.print("Please enter y or n.");
+						valid = false;
+					}
+				}while(!valid);
 			}else {
 				orderList.get(orderListNo).drink.add(drink);
 			}
