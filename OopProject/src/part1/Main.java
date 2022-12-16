@@ -292,7 +292,7 @@ public class Main {
 					System.out.println("Total calories: " + calories + "kcal");
 					System.out.println("Total price: RM" + String.format("%.2f", price));
 					System.out.println("\nEnter any key to continue...");
-					scanner.nextLine();
+					scanner.next();
 				}
 				break;
 				
@@ -344,6 +344,7 @@ public class Main {
 							break;
 							
 						}else if(cancel == 2) {
+						
 							int numArrayListUser = orderList.get(0).findUser(orderList, userLogin);
 							System.out.println("---------------OrderList---------------");
 							for(int i = 0 ; i < orderList.get(numArrayListUser).getFood().size() ; i++) {
@@ -374,6 +375,7 @@ public class Main {
 							if(orderList.get(numArrayListUser).getFood().size() == 0 && orderList.get(numArrayListUser).getDrink().size() == 0 ){
 								orderList.remove(orderList.get(0).findUser(orderList, userLogin));
 							}
+							break;
 							
 						}else if(cancel == 3){
 						}else {

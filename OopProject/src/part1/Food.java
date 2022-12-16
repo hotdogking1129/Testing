@@ -31,4 +31,4 @@ public class Food extends Product{
 		return getProductName() + " (" + getSauce() + ")" + " (" + getDetail() + " kcal)"+"-RM" + String.format("%.2f",getPrice());
 	}
 	
-}
+}	
