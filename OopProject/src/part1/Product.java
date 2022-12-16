@@ -44,4 +44,8 @@ public class Product {
 		return quantityInOrder;
 	}
 	
+	public String toFile() {
+		return getProductName() + "/" + getDetail() + "/" + getPrice() ;
+	}
+	
 }

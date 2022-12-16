@@ -7,15 +7,19 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 public class Main {
 		
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 		
 		List<User>user = new ArrayList<>();
 		List<Food>food = new ArrayList<>();
 		List<Drink>drink = new ArrayList<>();
 		List<OrderList>orderList = new ArrayList<>();
 		
+		/*
 		food.add(new Food("Nasi Lemak", 360, 4.50));
 		food.add(new Food("Roti canai", 200, 2.00));
 		food.add(new Food("Nasi Madu Ayam", 500, 5.00));
@@ -23,10 +27,77 @@ public class Main {
 		drink.add(new Drink("Milo", 100, 2.00));
 		drink.add(new Drink("Sirap", 210, 1.80));
 		drink.add(new Drink("Teh O", 120, 1.50));
+		*/
 		
+		//Read product from the file
+		Scanner readFile = new Scanner(new File("product.txt"));
+		int fileloop = 0;
+		while (readFile.hasNextLine()) {
+			String a = readFile.nextLine();
+			String[] b = a.split("#",2);
+			String[] c = b[0].split("/", 3);
+			String[] d = b[1].split("/",3);
+			if(c[0].equalsIgnoreCase("!")) {
+				//Do nothing
+			}else {
+				//Input food arrayList
+				food.add(new Food ("",0,0));
+				food.get(fileloop).setProductName(c[0]);
+				food.get(fileloop).setDetail(Double.valueOf(c[1]));
+				food.get(fileloop).setPrice(Double.valueOf(c[2]));
+			}
+			if(d[0].equalsIgnoreCase("!")) {
+				//Do nothing
+			}else {
+				//Input food arrayList
+				drink.add(new Drink("",0,0));
+				drink.get(fileloop).setProductName(d[0]);
+				drink.get(fileloop).setDetail(Double.valueOf(d[1]));
+				drink.get(fileloop).setPrice(Double.valueOf(d[2]));
+			}
+			fileloop++;
+		}
+		
+		/*
 		user.add(new User("sun","AI210343","1234"));
 		user.add(new User("see","AI210334","4321"));
 		user.add(new User("edison","AI210408","2314"));
+		*/
+		
+		//Read part
+		Scanner readUserFile = new Scanner(new File("user.txt"));
+		fileloop = 0;
+		while (readUserFile.hasNextLine()) {
+			String a = readUserFile.nextLine();
+			String[] b = a.split("/", 3);
+			
+			//Input food arrayList
+			user.add(new User("","",""));
+			user.get(fileloop).setName(b[0]);
+			user.get(fileloop).setNoMatrics(b[1]);
+			
+			// now convert the string to byte array
+            // for decryption
+            byte[] bb = new byte[b[2].length()];
+            for (int i=0; i<b[2].length(); i++) {
+                bb[i] = (byte) b[2].charAt(i);
+            }
+            String password = "";
+            try {
+	            // decrypt the text
+	            String key = "Bar12345Bar12345";
+	            SecretKeySpec aesKey = new SecretKeySpec(key.getBytes(), "AES");
+	            Cipher cipher = Cipher.getInstance("AES");
+	            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+	            password = new String(cipher.doFinal(bb));
+            }catch (Exception e) {
+            	e.printStackTrace();
+            }
+			
+			user.get(fileloop).setPassword(password);
+			
+			fileloop++;
+		}
 		
 		
 		

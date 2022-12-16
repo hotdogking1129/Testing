@@ -1,5 +1,10 @@
 package part1;
 
+import java.awt.RenderingHints.Key;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 public class User {
 	private String userName;
 	private String noMatrics;
@@ -33,6 +38,32 @@ public class User {
 	
 	public String getPassword() {
 		return password;
+	}
+	
+	public String toFile() {
+		String encPassword = "";
+		try 
+        {
+            String text = getPassword();
+            String key = "Bar12345Bar12345"; // 128 bit key
+            // Create key and cipher
+            SecretKeySpec aesKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            // encrypt the text
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+            byte[] encrypted = cipher.doFinal(text.getBytes());
+
+            StringBuilder sb = new StringBuilder();
+            for (byte b: encrypted) {
+                sb.append((char)b);
+            }
+            // the encrypted String
+            encPassword = sb.toString();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    
+		return getName() + "/" + getNoMatrics() + "/" + encPassword;
 	}
 	
 }
