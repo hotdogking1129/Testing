@@ -227,6 +227,12 @@ public class Main {
 				
 				case 1: 
 					//Add food
+					
+					MyFrame frame = new MyFrame(food);
+					frame.add(frame.panel);
+					frame.pack();
+					frame.setVisible(true);
+					
 					int num = 0;
 					do {
 						Scanner input = new Scanner(System.in);
@@ -236,7 +242,7 @@ public class Main {
 						}
 						System.out.println("-------------------------------------------------");
 						
-							num = 0;
+						num = 0;
 						try {
 							System.out.println("Enter the type of food you want.");
 							num = input.nextInt();
@@ -446,7 +452,7 @@ public class Main {
 									}
 									valid = true;
 									}catch (InputMismatchException e) {
-										System.out.println("!!! Please enter a number !!!");
+										System.out.println("!!! Please enter y or n !!!");
 										valid = false;
 									}
 								}while(!valid);
