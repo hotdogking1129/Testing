@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author OMEN
- *
- */
-module ds {
-}
